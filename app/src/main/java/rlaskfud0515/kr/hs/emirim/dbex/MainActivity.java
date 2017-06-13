@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     EditText edit_group_Name,edit_count; Button init,insert,select;
@@ -37,6 +38,16 @@ public class MainActivity extends AppCompatActivity {
                 myhelper.onUpgrade(sqlDB,1,2);
                 sqlDB.close();
 
+            }
+        });
+        insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sqlDB=myhelper.getWritableDatabase();
+                String sql="insert into idolTable values('"+edit_group_Name.getText()+"',"+edit_count.getText()+")"; //문자열 값은 작은 따옴표
+                sqlDB.execSQL(sql);
+                sqlDB.close();
+                Toast.makeText(MainActivity.this, "저장됨", Toast.LENGTH_SHORT).show();
             }
         });
     }
