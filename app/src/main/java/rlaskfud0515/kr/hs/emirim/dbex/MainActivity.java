@@ -5,18 +5,45 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
+    EditText edit_group_Name,edit_count; Button init,insert,select;
+    EditText edit_result_name,edit_result_count;
+    MyDBHelper myhelper;
+    SQLiteDatabase sqlDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        edit_group_Name=(EditText)findViewById(R.id.edit_groupName);
+        edit_count=(EditText)findViewById(R.id.edit_count);
+        edit_result_name=(EditText)findViewById(R.id.edit_result_name);
+        edit_result_count=(EditText)findViewById(R.id.edit_result_count);
+        init = (Button)findViewById(R.id.but_init);
+        insert = (Button)findViewById(R.id.but_insert);
+        select = (Button)findViewById(R.id.but_select);
+
+        //DB 생성
+        myhelper=new MyDBHelper(this);
+        //기존의 테이블이 존재하면 삭제하고 테이블을 새로 생성한다.
+        init.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sqlDB=myhelper.getWritableDatabase();
+                myhelper.onUpgrade(sqlDB,1,2);
+                sqlDB.close();
+
+            }
+        });
     }
 
     class MyDBHelper extends SQLiteOpenHelper{
         public MyDBHelper(Context context){
-            super(context, "groupDB",null,1);
+            super(context, "groupDB", null, 1);
         }
         //idolTable이라는 이름의 테이블 생성
         @Override
@@ -33,5 +60,4 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
 }
