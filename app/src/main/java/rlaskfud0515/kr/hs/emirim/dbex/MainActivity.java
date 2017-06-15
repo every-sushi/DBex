@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    EditText edit_group_Name,edit_count; Button init,insert,select;
+    EditText edit_group_Name,edit_count; Button init,insert,select,update,delete;
     EditText edit_result_name,edit_result_count;
     MyDBHelper myhelper;
     SQLiteDatabase sqlDB;
@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         init = (Button)findViewById(R.id.but_init);
         insert = (Button)findViewById(R.id.but_insert);
         select = (Button)findViewById(R.id.but_select);
+        update=(Button )findViewById(R.id.but_update);
+        delete=(Button)findViewById(R.id.but_delete);
 
         //DB 생성
         myhelper=new MyDBHelper(this);
@@ -60,8 +62,23 @@ public class MainActivity extends AppCompatActivity {
                 String names="Idol 이름"+"\r\n"+"======"+"\r\n";
                 String counts="Idol 인원수"+"\r\n"+"======"+"\r\n";
                 while(cursor.moveToNext()){
-
+                    names +=cursor.getString(0)+"\r\n";//첫번째 컬럼
+                    counts += cursor.getInt(1)+"\r\n";
                 }
+                edit_result_name.setText(names);
+                edit_result_count.setText(counts);
+                cursor.close();
+                sqlDB.close();
+            }
+        });
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sqlDB=myhelper.getWritableDatabase();
+                String sql="update idolTable set idolCount="+edit_count.getText()+"where idolName='"+edit_group_Name.getText();
+                sqlDB.execSQL(sql);
+                sqlDB.close();
+                Toast.makeText(MainActivity.this, "인원수가 수정됨", Toast.LENGTH_SHORT).show();
             }
         });
     }
